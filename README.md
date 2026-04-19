@@ -136,3 +136,13 @@ Evaluation writes `evaluation_results.csv` next to the checkpoint run directory.
 - `--dropout`: dropout inside the classifier MLP.
 - `--wandb_mode`: use `online`, `offline`, or `disabled`.
 
+## 🔖 Citation
+```bibtex
+@article{dhakal2026simlbr,
+  title={SimLBR: Learning to Detect Fake Images by Learning to Detect Real Images},
+  author={Dhakal, Aayush and Khanal, Subash and Sastry, Srikumar and Arndt, Jacob and Ambrozio Dias, Philipe and Lunga, Dalton and Jacobs, Nathan},
+  booktitle={Computer Vision and Pattern Recognition},
+  year={2026},
+  organization={IEEE/CVF}
+}
+```
