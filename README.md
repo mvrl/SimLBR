@@ -5,6 +5,14 @@
 [![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Coming%20Soon-FFD21E?logo=huggingface&logoColor=black)](#)
 
 </center>
+[Aayush Dhakal*](https://sites.wustl.edu/aayush/)&nbsp;&nbsp;&nbsp;
+[Subash Khanal](https://subash-khanal.github.io/)&nbsp;&nbsp;&nbsp;
+[Srikumar Sastry](https://vishu26.github.io/)&nbsp;&nbsp;&nbsp;
+[Jacob Arndt](https://www.ornl.gov/staff-profile/jacob-w-arndt)&nbsp;&nbsp;&nbsp;
+[Philipe Ambrozio Dias](https://www.ornl.gov/staff-profile/philipe-ambrozio-dias)&nbsp;&nbsp;&nbsp;
+[Dalton Lunga](https://www.ornl.gov/staff-profile/dalton-d-lunga)&nbsp;&nbsp;&nbsp;
+[Nathan Jacobs](https://jacobsn.github.io/)
+
 </div>
 <br>
 This repo contains the code for the CVPR 2026 paper SimLBR. We introduce a new regularization objective, Latent Blending Regularization (LBR), for generalizable AI-generated Image Detection.
