@@ -22,7 +22,7 @@ This repo contains the code for the CVPR 2026 paper SimLBR. We introduce a new r
 A frozen DINOv3 backbone extracts one CLS embedding per image, and a lightweight MLP head learns the real/fake classifier. When `--lbr` flag is enabled, real-image tokens are shifted assymetrically towards fake-image tokens during training, creating pseudo-fake samples near the real distribution. Validation and test always use unmodified images.
 
 
-## Setup
+## ⚙️ Setup
 
 
 DINOv3 loading expects `DINO_V3_KEY`, the API key for dinov3 model:
@@ -37,7 +37,7 @@ Run commands from the repository root:
 cd ./SimLBR
 ```
 
-## Data Layout
+## 🗄️ Data Layout
 
 AIGC training uses `ProGAN`:
 
@@ -61,7 +61,7 @@ GenImage/
 
 Fake samples are labeled `1`; real samples are labeled `0`. During training, each fake anchor is paired with a random real image from the same dataset.
 
-## Training
+## 🏋️ Training
 
 Baseline detector without latent blending:
 
@@ -103,7 +103,7 @@ Fast development check:
 python -m simlbr.train --fast_dev_run --wandb_mode disabled --accelerator cpu --devices 1
 ```
 
-## Evaluation
+## 🕵️ Evaluation
 
 Evaluate all subsets for a dataset:
 
@@ -127,7 +127,7 @@ python -m simlbr.evaluate \
 
 Evaluation writes `evaluation_results.csv` next to the checkpoint run directory. I `--eval_datasets` is not passed, this script launches evaluation across all generative models in the given dataset. 
 
-## Important Flags
+## 🎌 Important Flags
 
 - `--lbr`: enable Latent Blending Regularization (LBR) during training.
 - `--lbrdist LOW HIGH`: alpha range for latent blending; default is `0.5 0.8`.
