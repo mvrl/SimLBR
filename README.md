@@ -1,32 +1,28 @@
-# SimLBR
+# (CVPR 2026) SimLBR: Learning to Detect Fake Images by Learning to Detect Real Images 
 
-SimLBR is a compact CLS-token deepfake detector with optional latent blending regularization. A frozen DINOv3 backbone extracts one CLS embedding per image, and a lightweight MLP head learns the real/fake classifier. When `--lbr` is enabled, fake-image CLS tokens are blended toward paired real-image CLS tokens during training, creating pseudo-fake samples near the real distribution while validation and test always use unmodified images.
+This repo contains the code for the CVPR 2026 paper SimLBR. We introduce a new regularization objective, Latent Blending Regularization (LBR), for generalizable AI-generated Image Detection.
 
-This repository is intentionally CLS-only. It does not include patch classifiers, patch-level LBR, intermediate-layer blending, attention reducers, or dual-branch fusion.
+A frozen DINOv3 backbone extracts one CLS embedding per image, and a lightweight MLP head learns the real/fake classifier. When `--lbr` flag is enabled, real-image tokens are shifted assymetrically towards fake-image tokens during training, creating pseudo-fake samples near the real distribution. Validation and test always use unmodified images.
+
 
 ## Setup
 
-Use the existing `mvrl` conda environment:
+
+DINOv3 loading expects `DINO_V3_KEY` expects the API key for dinov3 model:
 
 ```bash
-conda activate mvrl
-```
-
-DINOv3 loading expects `DINO_V3_KEY` to point to the local or remote DINOv3 weights used by `torch.hub.load`:
-
-```bash
-export DINO_V3_KEY=/path/to/dinov3_vitl16_weights.pth
+export DINO_V3_KEY=API_KEY_FOR_DINO_V3_L16
 ```
 
 Run commands from the repository root:
 
 ```bash
-cd /projects/bdec/adhakal2/SimLBR
+cd ./SimLBR
 ```
 
 ## Data Layout
 
-AIGC training uses ProGAN:
+AIGC training uses `ProGAN`:
 
 ```text
 AIGCDetectionBenchMark/
@@ -36,7 +32,7 @@ AIGCDetectionBenchMark/
   test/<model>/1_fake/*
 ```
 
-GenImage uses:
+GenImage training uses `stable_diffusion_v_1_4`:
 
 ```text
 GenImage/
@@ -50,7 +46,7 @@ Fake samples are labeled `1`; real samples are labeled `0`. During training, eac
 
 ## Training
 
-Baseline CLS detector without latent blending:
+Baseline detector without latent blending:
 
 ```bash
 python -m simlbr.train \
@@ -58,7 +54,7 @@ python -m simlbr.train \
   --data_dir /projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark \
   --train_model ProGAN \
   --val_model combined \
-  --ds_fraction 0.2 \
+  --ds_fraction 0.05 \
   --batch_size 200 \
   --num_workers 20 \
   --max_epochs 5 \
@@ -112,15 +108,14 @@ python -m simlbr.evaluate \
   --eval_datasets DALLE2 Midjourney
 ```
 
-Evaluation writes `evaluation_results.csv` next to the checkpoint run directory.
+Evaluation writes `evaluation_results.csv` next to the checkpoint run directory. I `--eval_datasets` is not passed, this script launches evaluation across all generative models in the given dataset. 
 
 ## Important Flags
 
-- `--lbr`: enable CLS-token latent blending during training.
+- `--lbr`: enable Latent Blending Regularization (LBR) during training.
 - `--lbrdist LOW HIGH`: alpha range for latent blending; default is `0.5 0.8`.
 - `--hidden_layers`: number of MLP hidden layers after the DINOv3 CLS token.
 - `--activation`: `relu` or `gelu`.
 - `--dropout`: dropout inside the classifier MLP.
 - `--wandb_mode`: use `online`, `offline`, or `disabled`.
 
-Patch-level LLBR flags such as `--patch_reduction`, `--cls_selection`, and `--lbr_blend_layer` are intentionally not part of this repo.
