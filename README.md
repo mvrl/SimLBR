@@ -1,4 +1,7 @@
-# (CVPR 2026) SimLBR: Learning to Detect Fake Images by Learning to Detect Real Images 
+# (CVPR 2026) SimLBR: Learning to Detect Fake Images by Learning to Detect Real Images 🤖🖼️🤖
+
+[![arXiv](https://img.shields.io/badge/arXiv-2602.20412-b31b1b.svg?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2602.20412)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Coming%20Soon-FFD21E?logo=huggingface&logoColor=black)](#)
 
 This repo contains the code for the CVPR 2026 paper SimLBR. We introduce a new regularization objective, Latent Blending Regularization (LBR), for generalizable AI-generated Image Detection.
 
