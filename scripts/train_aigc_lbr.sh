@@ -9,7 +9,7 @@ python -m simlbr.train \
     --accelerator gpu \
     --val_check_interval 1.0 \
     --dataset_name aigc \
-    --data_dir /projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark \
+    --data_dir ../data/fake_data/AIGC/AIGCDetectionBenchMark \
     --train_model ProGAN \
     --val_model combined \
     --ds_fraction 1.0 \

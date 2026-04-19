@@ -124,7 +124,7 @@ class ProGANDataset(Dataset):
 
     def __init__(
         self,
-        root_dir="/projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark",
+        root_dir="../data/fake_data/AIGC/AIGCDetectionBenchMark",
         mode="train",
         model="ProGAN",
         degradation_aug=False,
@@ -194,7 +194,7 @@ class AIGCDataset(Dataset):
 
     def __init__(
         self,
-        root_dir="/projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark",
+        root_dir="../data/fake_data/AIGC/AIGCDetectionBenchMark",
         model="ADM",
         mode="test",
         degradation_aug=False,
@@ -294,7 +294,7 @@ class GenImageDataset(Dataset):
 
     def __init__(
         self,
-        root_dir="/projects/bdec/adhakal2/data/fake_data/GenImage",
+        root_dir="../data/fake_data/GenImage",
         model="BigGAN",
         mode="val",
         degradation_aug=False,
