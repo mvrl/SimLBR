@@ -1,21 +1,22 @@
 # (CVPR 2026) SimLBR: Learning to Detect Fake Images by Learning to Detect Real Images 🤖🖼️🤖
-
 <div align="center">
 
 [![arXiv](https://img.shields.io/badge/arXiv-2602.20412-b31b1b.svg?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2602.20412)
 [![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Coming%20Soon-FFD21E?logo=huggingface&logoColor=black)](#)
 
 </center>
-
+</div>
+<br>
 This repo contains the code for the CVPR 2026 paper SimLBR. We introduce a new regularization objective, Latent Blending Regularization (LBR), for generalizable AI-generated Image Detection.
-
+<br>
+<br>
 A frozen DINOv3 backbone extracts one CLS embedding per image, and a lightweight MLP head learns the real/fake classifier. When `--lbr` flag is enabled, real-image tokens are shifted assymetrically towards fake-image tokens during training, creating pseudo-fake samples near the real distribution. Validation and test always use unmodified images.
 
 
 ## Setup
 
 
-DINOv3 loading expects `DINO_V3_KEY` expects the API key for dinov3 model:
+DINOv3 loading expects `DINO_V3_KEY`, the API key for dinov3 model:
 
 ```bash
 export DINO_V3_KEY=API_KEY_FOR_DINO_V3_L16
