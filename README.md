@@ -84,7 +84,7 @@ SimLBR training with CLS-token latent blending:
 ```bash
 python -m simlbr.train \
   --dataset_name aigc \
-  --data_dir /projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark \
+  --data_dir ../data/fake_data/AIGC/AIGCDetectionBenchMark \
   --train_model ProGAN \
   --val_model combined \
   --ds_fraction 0.2 \
@@ -110,7 +110,7 @@ Evaluate all subsets for a dataset:
 ```bash
 python -m simlbr.evaluate \
   --dataset_name aigc \
-  --data_dir /projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark \
+  --data_dir ../data/fake_data/AIGC/AIGCDetectionBenchMark \
   --ckpt_path /path/to/checkpoint.ckpt \
   --devices 1
 ```
@@ -120,7 +120,7 @@ Evaluate selected subsets:
 ```bash
 python -m simlbr.evaluate \
   --dataset_name aigc \
-  --data_dir /projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark \
+  --data_dir ../data/fake_data/AIGC/AIGCDetectionBenchMark \
   --ckpt_path /path/to/checkpoint.ckpt \
   --eval_datasets DALLE2 Midjourney
 ```
