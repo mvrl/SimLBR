@@ -23,6 +23,6 @@ python -m simlbr.train \
     --dropout 0.3 \
     --lbr \
     --lbrdist 0.5 0.8 \
-    --log_dir /projects/bdec/adhakal2/SimLBR/logs \
+    --log_dir ../SimLBR/logs \
     --run_name aigc_simlbr_test \
     --project_name SimLBR_Release 
