@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /projects/bdec/adhakal2/SimLBR
+cd ./SimLBR
 
 python -m simlbr.evaluate \
     --devices 1 \
