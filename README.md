@@ -68,7 +68,7 @@ Baseline detector without latent blending:
 ```bash
 python -m simlbr.train \
   --dataset_name aigc \
-  --data_dir /projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark \
+  --data_dir ../data/fake_data/AIGC/AIGCDetectionBenchMark \
   --train_model ProGAN \
   --val_model combined \
   --ds_fraction 0.05 \
