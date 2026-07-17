@@ -125,7 +125,7 @@ python -m simlbr.evaluate \
   --eval_datasets DALLE2 Midjourney
 ```
 
-Evaluation writes `evaluation_results.csv` next to the checkpoint run directory. I `--eval_datasets` is not passed, this script launches evaluation across all generative models in the given dataset. 
+Evaluation writes `evaluation_results.csv` next to the checkpoint run directory. If `--eval_datasets` is not passed, this script launches evaluation across all generative models in the given dataset. 
 
 ## 🎌 Important Flags
 
