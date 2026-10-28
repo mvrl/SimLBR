@@ -83,12 +83,12 @@ Our original GenImage evaluation of the ADM subset contained **only real images*
 
 Corrected results for the released `genimage` model (all other GenImage subsets, and all AIGCDetectionBenchMark results, are unaffected):
 
-| | ADM Acc | ADM Real Acc | ADM Fake Acc | ADM AP | ADM F1 | GenImage Avg. Acc |
+| | ADM Acc | ADM Real Acc | 
 |---|---|---|---|---|---|---|
-| Originally reported | 97.0 | 97.0 | — (0 fakes) | — | 0.000 | 94.5 |
-| Corrected | 69.4 | 97.0 | 41.9 | 85.5 | 0.578 | 91.1 |
+| Originally reported | 97.0 | 97.0 | 
+| Corrected | 69.4 | 97.0 |
 
-The released code loads both `.png` and `.PNG` fakes, so `python -m simlbr.evaluate --dataset_name genimage --pretrained genimage` reproduces the corrected numbers. The training data of the released models did not include ADM, so the models themselves are unchanged.
+The released code loads both latest commit reproduces the corrected numbers. The training data of the released models did not include ADM, so the models themselves are unchanged.
 
 ## 🗄️ Data Layout
 
