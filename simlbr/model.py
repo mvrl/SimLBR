@@ -1,9 +1,15 @@
+import json
+import os
+
 import torch
 import torch.nn as nn
 from lightning.pytorch import LightningModule
 from torchmetrics.classification import BinaryAccuracy, BinaryAveragePrecision, BinaryF1Score
 
 from .backbones import VisionBackbone
+
+HF_REPO_ID = "MVRL/SimLBR"
+PRETRAINED_VARIANTS = ("aigc", "genimage")
 
 
 class SimLBR(LightningModule):
@@ -47,6 +53,47 @@ class SimLBR(LightningModule):
         print(f"LBR enabled: {self.lbr}")
         if self.lbr:
             print(f"LBR alpha distribution: U{self.lbrdist}")
+
+    @classmethod
+    def from_pretrained(cls, variant: str = "aigc", repo_id: str = HF_REPO_ID):
+        """Load a released SimLBR detector.
+
+        Released files hold only the MLP head; the frozen DINOv3 backbone is loaded
+        from Meta as usual. `repo_id` may also be a local directory with the same layout.
+        """
+        if variant not in PRETRAINED_VARIANTS:
+            raise ValueError(f"Unknown variant: {variant}. Choose from {PRETRAINED_VARIANTS}.")
+        if os.path.isdir(repo_id):
+            config_path = os.path.join(repo_id, variant, "config.json")
+            weights_path = os.path.join(repo_id, variant, "model.safetensors")
+        else:
+            from huggingface_hub import hf_hub_download
+
+            config_path = hf_hub_download(repo_id, f"{variant}/config.json")
+            weights_path = hf_hub_download(repo_id, f"{variant}/model.safetensors")
+
+        from safetensors.torch import load_file
+
+        with open(config_path) as f:
+            config = json.load(f)
+        model = cls(**config)
+        model.classifier.load_state_dict(load_file(weights_path))
+        return model.eval()
+
+    def export_pretrained(self, out_dir: str):
+        """Write the MLP head and its config in the layout read by `from_pretrained`."""
+        from safetensors.torch import save_file
+
+        os.makedirs(out_dir, exist_ok=True)
+        config = {
+            key: self.hparams[key]
+            for key in ("backbone", "activation", "hidden_layers", "dropout", "lbr", "lbrdist")
+        }
+        config["lbrdist"] = list(config["lbrdist"])
+        with open(os.path.join(out_dir, "config.json"), "w") as f:
+            json.dump(config, f, indent=2)
+        state_dict = {k: v.detach().cpu().contiguous() for k, v in self.classifier.state_dict().items()}
+        save_file(state_dict, os.path.join(out_dir, "model.safetensors"))
 
     @staticmethod
     def _validate_dist(dist) -> tuple[float, float]:

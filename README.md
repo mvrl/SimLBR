@@ -2,9 +2,7 @@
 <div align="center">
 
 [![arXiv](https://img.shields.io/badge/arXiv-2602.20412-b31b1b.svg?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2602.20412)
-[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Coming%20Soon-FFD21E?logo=huggingface&logoColor=black)](#)
-
-</center>
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Models-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/MVRL/SimLBR)
 
 [Aayush Dhakal*](https://sites.wustl.edu/aayush/)&nbsp;&nbsp;&nbsp;
 [Subash Khanal](https://subash-khanal.github.io/)&nbsp;&nbsp;&nbsp;
@@ -19,7 +17,7 @@
 This repo contains the code for the CVPR 2026 paper SimLBR. We introduce a new regularization objective, Latent Blending Regularization (LBR), for generalizable AI-generated Image Detection.
 <br>
 <br>
-A frozen DINOv3 backbone extracts one CLS embedding per image, and a lightweight MLP head learns the real/fake classifier. When `--lbr` flag is enabled, real-image tokens are shifted assymetrically towards fake-image tokens during training, creating pseudo-fake samples near the real distribution. Validation and test always use unmodified images.
+A frozen DINOv3 backbone extracts one CLS embedding per image, and a lightweight MLP head learns the real/fake classifier. When `--lbr` flag is enabled, real-image tokens are shifted asymmetrically towards fake-image tokens during training, creating pseudo-fake samples near the real distribution. Validation and test always use unmodified images.
 
 
 ## ⚙️ Setup
@@ -36,6 +34,61 @@ Run commands from the repository root:
 ```bash
 cd ./SimLBR
 ```
+
+## 🤗 Pretrained Models
+
+Pretrained detectors are hosted on Hugging Face at [MVRL/SimLBR](https://huggingface.co/MVRL/SimLBR). Each release file contains only the MLP head (~2.6 MB); the frozen DINOv3 ViT-L/16 backbone is loaded from Meta using `DINO_V3_KEY` as above.
+
+| Variant | Training data | Benchmark | Avg. Acc |
+|---|---|---|---|
+| `aigc` | ProGAN | AIGCDetectionBenchMark (16 subsets) | 88.4 |
+| `genimage` | GenImage SD v1.4 | GenImage (8 subsets) | 91.1* |
+
+\* Corrected GenImage numbers; see the [ADM erratum](#erratum-genimage-adm-evaluation) below.
+
+### Loading from Hugging Face
+
+Install the Hugging Face dependencies:
+
+```bash
+pip install huggingface_hub safetensors
+```
+
+`SimLBR.from_pretrained` downloads the head from `MVRL/SimLBR` (cached in `~/.cache/huggingface`), builds the DINOv3 backbone, and returns the model in eval mode:
+
+```python
+import torch
+from PIL import Image
+
+from simlbr import SimLBR
+from simlbr.utils import make_dinov3_transform
+
+model = SimLBR.from_pretrained("aigc")  # or "genimage"
+transform = make_dinov3_transform()     # 256x256 resize + the normalization the heads were trained with
+
+image = transform(Image.open("path/to/image.png").convert("RGB")).unsqueeze(0)
+with torch.no_grad():
+    p_fake = torch.sigmoid(model(image)).item()  # > 0.5 means fake
+```
+
+Score images from the command line:
+
+```bash
+python -m simlbr.predict --pretrained aigc path/to/image1.png path/to/image2.jpg
+```
+
+### Erratum: GenImage ADM evaluation
+
+Our original GenImage evaluation of the ADM subset contained **only real images**. GenImage's ADM fake images use an uppercase `.PNG` extension, and the embedding-extraction code only matched `*.png`, so all 6,000 ADM fakes were silently skipped. The reported ADM accuracy was therefore just the real-image accuracy, and AP could not be computed.
+
+Corrected results for the released `genimage` model (all other GenImage subsets, and all AIGCDetectionBenchMark results, are unaffected):
+
+| | ADM Acc | ADM Real Acc | ADM Fake Acc | ADM AP | ADM F1 | GenImage Avg. Acc |
+|---|---|---|---|---|---|---|
+| Originally reported | 97.0 | 97.0 | — (0 fakes) | — | 0.000 | 94.5 |
+| Corrected | 69.4 | 97.0 | 41.9 | 85.5 | 0.578 | 91.1 |
+
+The released code loads both `.png` and `.PNG` fakes, so `python -m simlbr.evaluate --dataset_name genimage --pretrained genimage` reproduces the corrected numbers. The training data of the released models did not include ADM, so the models themselves are unchanged.
 
 ## 🗄️ Data Layout
 
@@ -125,7 +178,16 @@ python -m simlbr.evaluate \
   --eval_datasets DALLE2 Midjourney
 ```
 
-Evaluation writes `evaluation_results.csv` next to the checkpoint run directory. If `--eval_datasets` is not passed, this script launches evaluation across all generative models in the given dataset. 
+Evaluate a released pretrained model instead of a local checkpoint:
+
+```bash
+python -m simlbr.evaluate \
+  --dataset_name aigc \
+  --data_dir ../data/fake_data/AIGC/AIGCDetectionBenchMark \
+  --pretrained aigc
+```
+
+Evaluation writes `evaluation_results.csv` next to the checkpoint run directory, or to `eval_results/pretrained_<variant>_on_<dataset>/` when using `--pretrained`. If `--eval_datasets` is not passed, this script launches evaluation across all generative models in the given dataset. 
 
 ## 🎌 Important Flags
 
@@ -138,7 +200,7 @@ Evaluation writes `evaluation_results.csv` next to the checkpoint run directory.
 
 ## 🔖 Citation
 ```bibtex
-@article{dhakal2026simlbr,
+@inproceedings{dhakal2026simlbr,
   title={SimLBR: Learning to Detect Fake Images by Learning to Detect Real Images},
   author={Dhakal, Aayush and Khanal, Subash and Sastry, Srikumar and Arndt, Jacob and Ambrozio Dias, Philipe and Lunga, Dalton and Jacobs, Nathan},
   booktitle={Computer Vision and Pattern Recognition},

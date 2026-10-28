@@ -8,7 +8,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from .datasets import AIGCDataset, GenImageDataset
-from .model import SimLBR
+from .model import PRETRAINED_VARIANTS, SimLBR
 from .utils import custom_collate
 
 
@@ -16,9 +16,11 @@ def get_args():
     parser = argparse.ArgumentParser(description="Evaluate a SimLBR checkpoint.")
     parser.add_argument("--devices", type=int, default=1)
     parser.add_argument("--dataset_name", type=str, choices=["aigc", "genimage"], default="aigc")
-    parser.add_argument("--data_dir", type=str, default="/projects/bdec/adhakal2/data/fake_data/AIGC/AIGCDetectionBenchMark")
+    parser.add_argument("--data_dir", type=str, default="../data/fake_data/AIGC/AIGCDetectionBenchMark")
     parser.add_argument("--eval_datasets", nargs="*", default=[])
-    parser.add_argument("--ckpt_path", type=str, required=True)
+    model_source = parser.add_mutually_exclusive_group(required=True)
+    model_source.add_argument("--ckpt_path", type=str)
+    model_source.add_argument("--pretrained", type=str, choices=PRETRAINED_VARIANTS)
     parser.add_argument("--batch_size", type=int, default=200)
     parser.add_argument("--num_workers", type=int, default=28)
     return parser.parse_args()
@@ -95,10 +97,14 @@ def evaluate(args, trainer, model):
 if __name__ == "__main__":
     torch.set_float32_matmul_precision("medium")
     args = get_args()
-    model = SimLBR.load_from_checkpoint(args.ckpt_path)
+    if args.pretrained:
+        model = SimLBR.from_pretrained(args.pretrained)
+        eval_dir = os.path.join("eval_results", f"pretrained_{args.pretrained}_on_{args.dataset_name}")
+    else:
+        model = SimLBR.load_from_checkpoint(args.ckpt_path)
+        eval_dir = os.path.join(os.path.dirname(os.path.dirname(args.ckpt_path)), "eval_results")
     trainer = pl.Trainer(accelerator="gpu", devices=args.devices, precision="16-mixed")
     results = evaluate(args, trainer, model)
-    eval_dir = os.path.join(os.path.dirname(os.path.dirname(args.ckpt_path)), "eval_results")
     os.makedirs(eval_dir, exist_ok=True)
     out_path = os.path.join(eval_dir, "evaluation_results.csv")
     results.to_csv(out_path, index=False)

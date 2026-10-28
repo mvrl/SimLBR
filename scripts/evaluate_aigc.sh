@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ./SimLBR
+cd ../
 
 python -m simlbr.evaluate \
     --devices 1 \
