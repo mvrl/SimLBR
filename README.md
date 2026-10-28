@@ -84,7 +84,7 @@ Our original GenImage evaluation of the ADM subset contained **only real images*
 Corrected results for the released `genimage` model (all other GenImage subsets, and all AIGCDetectionBenchMark results, are unaffected):
 
 | | ADM Acc | ADM Real Acc | 
-|---|---|
+|---|---|---|
 | Originally reported | 97.0 | 97.0 | 
 | Corrected | 69.4 | 97.0 |
 
