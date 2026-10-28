@@ -79,12 +79,12 @@ python -m simlbr.predict --pretrained aigc path/to/image1.png path/to/image2.jpg
 
 ### Erratum: GenImage ADM evaluation
 
-Our original GenImage evaluation of the ADM subset contained **only real images**. GenImage's ADM fake images use an uppercase `.PNG` extension, and the embedding-extraction code only matched `*.png`, so all 6,000 ADM fakes were silently skipped. The reported ADM accuracy was therefore just the real-image accuracy, and AP could not be computed.
+Our original GenImage evaluation of the ADM subset contained **only real images**. GenImage's ADM fake images use an uppercase `.PNG` extension, and the embedding-extraction code only matched `*.png`, so all 6,000 ADM fakes were silently skipped. The reported ADM accuracy was therefore just the real-image accuracy.
 
 Corrected results for the released `genimage` model (all other GenImage subsets, and all AIGCDetectionBenchMark results, are unaffected):
 
 | | ADM Acc | ADM Real Acc | 
-|---|---|---|---|---|---|---|
+|---|---|
 | Originally reported | 97.0 | 97.0 | 
 | Corrected | 69.4 | 97.0 |
 
